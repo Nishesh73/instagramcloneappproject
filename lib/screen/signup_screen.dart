@@ -3,9 +3,14 @@ import "package:flutter/material.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagramcloneapp/resources/resource.dart';
+import 'package:instagramcloneapp/screen/login_screen.dart';
 import 'package:instagramcloneapp/utils/colors.dart';
 import 'package:instagramcloneapp/utils/utils.dart';
 import 'package:instagramcloneapp/widgets/textinput_field.dart';
+
+import '../responsive/mobile_screenlayout.dart';
+import '../responsive/responsive_screen.dart';
+import '../responsive/web_screenlayout.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -31,6 +36,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     userNameController.dispose();
     bioController.dispose();
   }
+
+  void navigateToLogIn(){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ResponsiveLayout(webScreenLayout: WebScreenLayout(), mobileScreenLayout: MobileScreenLayout())));
+  }
+
 
   signUp() async{
     setState(() {
@@ -66,6 +76,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       unit8file = image;
     });
   }
+
+  
+  
 
   @override
   Widget build(BuildContext context) {
@@ -180,11 +193,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Text("Don't have an account?"),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: navigateToLogIn,
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: Text(
-                          "Sign up",
+                          "Login",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

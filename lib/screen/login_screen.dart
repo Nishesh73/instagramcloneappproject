@@ -1,9 +1,14 @@
 import "package:flutter/material.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagramcloneapp/resources/resource.dart';
+import 'package:instagramcloneapp/responsive/web_screenlayout.dart';
+import 'package:instagramcloneapp/screen/signup_screen.dart';
 import 'package:instagramcloneapp/utils/colors.dart';
 import 'package:instagramcloneapp/utils/utils.dart';
 import 'package:instagramcloneapp/widgets/textinput_field.dart';
+
+import '../responsive/mobile_screenlayout.dart';
+import '../responsive/responsive_screen.dart';
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
 
@@ -14,6 +19,12 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   final TextEditingController emailController=TextEditingController();
   final TextEditingController passWordController=TextEditingController();
+
+  void navigateToSignUp(){
+  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+
+   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ResponsiveLayout(webScreenLayout: WebScreenLayout(), mobileScreenLayout: MobileScreenLayout())));
+  }
 
   bool isLoading=false;
 
@@ -28,7 +39,12 @@ class _LogInScreenState extends State<LogInScreen> {
     isLoading=false;
   });
 if(res!="Success"){
+  
+}
+else{
   showSnackBar(res, context);
+
+
 }
 
 
@@ -98,7 +114,7 @@ if(res!="Success"){
                  Text("Don't have an account?"),),
 
                  GestureDetector(
-                  onTap: (){},
+                  onTap: navigateToSignUp,
                    child: Container(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     
