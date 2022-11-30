@@ -9,6 +9,7 @@ import 'package:instagramcloneapp/widgets/textinput_field.dart';
 
 import '../responsive/mobile_screenlayout.dart';
 import '../responsive/responsive_screen.dart';
+
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
 
@@ -17,39 +18,36 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  final TextEditingController emailController=TextEditingController();
-  final TextEditingController passWordController=TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passWordController = TextEditingController();
 
-  void navigateToSignUp(){
-  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+  void navigateToSignUp() {
+    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
 
-   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ResponsiveLayout(webScreenLayout: WebScreenLayout(), mobileScreenLayout: MobileScreenLayout())));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ResponsiveLayout(
+                webScreenLayout: WebScreenLayout(),
+                mobileScreenLayout: MobileScreenLayout())));
   }
 
-  bool isLoading=false;
+  bool isLoading = false;
 
-  void signInUser() async{
+  void signInUser() async {
     setState(() {
-      isLoading=true;
-      
+      isLoading = true;
     });
 
-  String res=await AuthMethods().signInUser(email: emailController.text, password: passWordController.text);
-  setState(() {
-    isLoading=false;
-  });
-if(res!="Success"){
-  
-}
-else{
-  showSnackBar(res, context);
-
-
-}
-
-
-
-
+    String res = await AuthMethods().signInUser(
+        email: emailController.text, password: passWordController.text);
+    setState(() {
+      isLoading = false;
+    });
+    if (res != "Success") {
+    } else {
+      showSnackBar(res, context);
+    }
   }
 
   @override
@@ -63,77 +61,85 @@ else{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Container(
+      body: SafeArea(
+          child: Container(
         padding: EdgeInsets.symmetric(horizontal: 30.0),
         width: double.infinity,
         child: Column(
-          
           children: [
             Flexible(
-              
-              child:Container(
-                height: 100.0,
-              )),
-            SvgPicture.asset("lib/assets/ic_instagram.svg",height: 64.0,color: primaryColor,),
-
-            SizedBox(height:24,),
-            Textinput(textEditingController: emailController,hintext: "Enter your email",textInputType: TextInputType.emailAddress,),
-            SizedBox(height: 24,),
-            Textinput(textEditingController: passWordController,hintext: "Enter your password",textInputType: TextInputType.text,isPass: true,),
-             SizedBox(height: 24,),
+                child: Container(
+              height: 100.0,
+            )),
+            SvgPicture.asset(
+              "lib/assets/ic_instagram.svg",
+              height: 64.0,
+              color: primaryColor,
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Textinput(
+              textEditingController: emailController,
+              hintext: "Enter your email",
+              textInputType: TextInputType.emailAddress,
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Textinput(
+              textEditingController: passWordController,
+              hintext: "Enter your password",
+              textInputType: TextInputType.text,
+              isPass: true,
+            ),
+            SizedBox(
+              height: 24,
+            ),
             InkWell(
               onTap: signInUser,
-
               child: Container(
-                child: isLoading?Center(
-                  child: CircularProgressIndicator(
-                    color: primaryColor,
-                  ),
-                ):Text("Log in"),
-                width: double.infinity,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: blueColor,
-                  borderRadius: BorderRadius.circular(4.0),
-                )
-                
-              ),
-            ) ,
-
-            Flexible(child: Container(
-             margin: EdgeInsets.only(bottom: 5.0),
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                          ),
+                        )
+                      : Text("Log in"),
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: blueColor,
+                    borderRadius: BorderRadius.circular(4.0),
+                  )),
+            ),
+            Flexible(
+                child: Container(
+              margin: EdgeInsets.only(bottom: 5.0),
             )),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  
-                  child:
-                 Text("Don't have an account?"),),
-
-                 GestureDetector(
+                  child: Text("Don't have an account?"),
+                ),
+                GestureDetector(
                   onTap: navigateToSignUp,
-                   child: Container(
+                  child: Container(
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    
-                    child:
-                   Text("Sign up",style: TextStyle(fontWeight: FontWeight.bold),),),
-                 ),
-                
-                
-
+                    child: Text(
+                      "Sign up",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ],
             )
-
-         
-
-
           ],
         ),
       )),
-
     );
   }
 }

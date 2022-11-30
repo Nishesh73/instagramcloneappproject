@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramcloneapp/utils/colors.dart';
+import 'package:instagramcloneapp/utils/globalvariable.dart';
 
 
 class MobileScreenLayout extends StatefulWidget {
@@ -27,11 +28,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     pageController.dispose();
   }
 
-void navigationTabbed(int page){
 
-
-
-}
 
  
  int _page=0;
@@ -39,11 +36,32 @@ void navigationTabbed(int page){
   Widget build(BuildContext context) {
      
     return Scaffold(
-      body: Center(child: Text("this is mobile")),
+      body: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: pageController,
+        onPageChanged: (int page){
+          setState(() {
+            _page=page;
+            
+          });
+          
+
+
+        },
+        
+
+        children: homeScreens,
+       
+
+      ),
 
       bottomNavigationBar: CupertinoTabBar(
+        
 
-        onTap: navigationTabbed,
+        onTap: (int page){
+
+          pageController.jumpToPage(page);
+        },
         backgroundColor: mobileBackgroundColor,
         
         
