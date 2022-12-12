@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:instagramcloneapp/models/user.dart';
 import 'package:instagramcloneapp/resources/resource.dart';
