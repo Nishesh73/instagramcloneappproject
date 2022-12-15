@@ -22,7 +22,7 @@ class _LogInScreenState extends State<LogInScreen> {
   final TextEditingController passWordController = TextEditingController();
 
   void navigateToSignUp() {
-    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
 
     Navigator.pushReplacement(
         context,
@@ -30,6 +30,8 @@ class _LogInScreenState extends State<LogInScreen> {
             builder: (context) => ResponsiveLayout(
                 webScreenLayout: WebScreenLayout(),
                 mobileScreenLayout: MobileScreenLayout())));
+
+
   }
 
   bool isLoading = false;

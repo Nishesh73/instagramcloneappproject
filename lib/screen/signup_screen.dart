@@ -39,6 +39,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void navigateToLogIn(){
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ResponsiveLayout(webScreenLayout: WebScreenLayout(), mobileScreenLayout: MobileScreenLayout())));
+
+    
   }
 
 

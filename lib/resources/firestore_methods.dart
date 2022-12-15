@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:instagramcloneapp/models/post.dart';
 import 'package:instagramcloneapp/resources/storage_methods.dart';
@@ -6,6 +7,7 @@ import 'package:uuid/uuid.dart';
 
 class FirestoreMethods {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth=FirebaseAuth.instance;
 
   // upload post
 
@@ -108,6 +110,55 @@ class FirestoreMethods {
       print(e.toString());
     }
 
+
+
+  }
+
+  Future<void> followUser(String uid,String followId) async{
+   
+
+    try {
+       DocumentSnapshot documentSnapshot=await firestore.collection("users").doc(uid).get();
+       List followIng=(documentSnapshot.data() as dynamic)["followIng"];
+       if(followIng.contains(followId)){
+
+      await firestore.collection("users").doc(followId).update({
+        "followers":FieldValue.arrayRemove([uid]),
+});      
+
+   await firestore.collection("users").doc(followId).update({
+        "following":FieldValue.arrayRemove([followId]),
+});
+
+
+
+       }
+       else{
+          await firestore.collection("users").doc(followId).update({
+        "followers":FieldValue.arrayUnion([uid]),
+});      
+
+   await firestore.collection("users").doc(followId).update({
+        "following":FieldValue.arrayUnion([followId]),
+});
+
+
+       }
+      
+    } catch (e) {
+      print(e.toString());
+      
+    }
+
+
+
+
+  }
+
+  Future<void> signOut() async{
+   await _auth.signOut();
+   
+    
 
 
   }
