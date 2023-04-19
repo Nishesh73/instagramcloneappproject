@@ -34,7 +34,7 @@ class _SignUpState extends State<SignUp> {
           child: SingleChildScrollView(
             child: Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               margin: EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,6 +86,8 @@ class _SignUpState extends State<SignUp> {
                           validator: ((value) {
                             if (value!.isEmpty)
                               return "please provide username";
+
+                            return null;  
                           }),
                           onSaved: ((newValue) {
                             setState(() {
@@ -106,53 +108,61 @@ class _SignUpState extends State<SignUp> {
                                       color: Color.fromARGB(21, 0, 0, 0))),
                               hintText: "Enter username"),
                         ),
-                  TextFormField(
-                    validator: ((value) {
-                      if (value!.isEmpty) return "invalid email";
-                    }),
-                    onSaved: ((newValue) {
-                      setState(() {
-                        email = newValue!;
-                      });
-                    }),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: Color.fromARGB(1, 196, 12, 12),
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 2.0, color: Color.fromARGB(1, 8, 0, 0))),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 3.0,
-                                color: Color.fromARGB(21, 0, 0, 0))),
-                        hintText: "Enter email address"),
+                  Expanded(
+                    child: TextFormField(
+                      validator: ((value) {
+                        if (value!.isEmpty) return "invalid email";
+                  
+                      return null;  
+                      }),
+                      onSaved: ((newValue) {
+                        setState(() {
+                          email = newValue!;
+                        });
+                      }),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: Color.fromARGB(1, 196, 12, 12),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2.0, color: Color.fromARGB(1, 8, 0, 0))),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 3.0,
+                                  color: Color.fromARGB(21, 0, 0, 0))),
+                          hintText: "Enter email address"),
+                    ),
                   ),
                   const SizedBox(
                     height: 10.0,
                   ),
-                  TextFormField(
-                    obscureText: true,
-                    validator: ((value) {
-                      if (value!.isEmpty) return "invalid password,";
-                    }),
-                    onSaved: ((newValue) {
-                      setState(() {
-                        password = newValue!;
-                      });
-                    }),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: Color.fromARGB(1, 196, 12, 12),
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 2.0, color: Color.fromARGB(1, 8, 0, 0))),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 3.0,
-                                color: Color.fromARGB(21, 0, 0, 0))),
-                        hintText: "Enter password"),
+                  Expanded(
+                    child: TextFormField(
+                      obscureText: true,
+                      validator: ((value) {
+                        if (value!.isEmpty) return "invalid password,";
+                  
+                        return null;
+                      }),
+                      onSaved: ((newValue) {
+                        setState(() {
+                          password = newValue!;
+                        });
+                      }),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: Color.fromARGB(1, 196, 12, 12),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2.0, color: Color.fromARGB(1, 8, 0, 0))),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 3.0,
+                                  color: Color.fromARGB(21, 0, 0, 0))),
+                          hintText: "Enter password"),
+                    ),
                   ),
                   const SizedBox(
                     height: 15.0,
@@ -162,6 +172,8 @@ class _SignUpState extends State<SignUp> {
                       : TextFormField(
                           validator: ((value) {
                             if (value!.isEmpty) return "Empty bio";
+
+                            return null;
                           }),
                           onSaved: ((newValue) {
                             setState(() {

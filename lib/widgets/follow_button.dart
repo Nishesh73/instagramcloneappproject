@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+//this page is removed from actual code
 class FollowButtons extends StatelessWidget {
   Function()? function;
   final String text;
@@ -7,7 +9,7 @@ class FollowButtons extends StatelessWidget {
   final textColor;
 
 
-   FollowButtons({super.key,required this.text,this.function,this.backgroundColor,required this.borderColor,required this.textColor});
+   FollowButtons({super.key,required this.text,required this.function,this.backgroundColor,required this.borderColor,required this.textColor});
 
   @override
   Widget build(BuildContext context) {

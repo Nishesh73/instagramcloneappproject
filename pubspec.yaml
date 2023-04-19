@@ -42,6 +42,7 @@ dependencies:
   intl: ^0.17.0
   provider: ^6.0.4
   uuid: ^3.0.7
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -59,7 +60,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/ic_instagram.svg
+    - lib/assets/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
