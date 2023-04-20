@@ -240,14 +240,18 @@ class _SignUpState extends State<SignUp> {
                           isLogin = !isLogin;
                         });
 
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResponSive(
-                                      mobileScreenLayout: MobileScreen(),
-                                      webScreenLayout: WebScreenLayout(),
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => ResponSive(
+                        //               mobileScreenLayout: MobileScreen(),
+                        //               webScreenLayout: WebScreenLayout(),
+                        //             )));
+
+
+
                       }),
+
                       child: Container(
                         child: isLogin
                             ? Text("Don't have an account? proceed for singup")

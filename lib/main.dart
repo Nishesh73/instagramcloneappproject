@@ -37,8 +37,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
         
-        // home:ResponSive(mobileScreenLayout: MobileScreen(), webScreenLayout: WebScreenLayout(),),
-        home: StreamBuilder(stream:FirebaseAuth.instance.authStateChanges(),
+        // home:SignUp())
+
+          home: StreamBuilder(stream:FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
     
           if(snapshot.connectionState==ConnectionState.active){
@@ -68,14 +69,19 @@ class MyApp extends StatelessWidget {
     
           }
           
-    
-    
-          
-        },)
+        }
+          )
+          )
+          );
+      
+      
+        }
+        }
+  
         
-        ,
-    
-        
-      ),
-    );
-  }}
+
+
+  
+  
+  
+      

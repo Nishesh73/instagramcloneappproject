@@ -1,10 +1,15 @@
-import 'dart:math';
+import 'dart:developer';
+
+import 'dart:io';
+
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/cupertino.dart";
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_methods.dart';
 import 'package:instagramcloneapp/screens/sign_up.dart';
 import 'package:instagramcloneapp/services/firestore_methods.dart';
@@ -29,6 +34,9 @@ class _ProfileChatState extends State<ProfileChat> {
   final _formKey = GlobalKey<FormState>();
   String name = "";
   String about = "";
+
+  //String? imagePath;
+   Uint8List? uintFile;
   
 
  
@@ -98,7 +106,32 @@ class _ProfileChatState extends State<ProfileChat> {
                     children: [
                      Stack(
                        children: [
-                         ClipRRect(
+
+                        uintFile!=null?ClipRRect(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .15 ),
+                                     child: CircleAvatar(
+                                      radius: 64,
+
+                                      backgroundImage: MemoryImage(uintFile!),
+                                     ),
+
+                                      //   child: Image.file(
+                                      // File(imagePath!),
+
+                                      // fit: BoxFit.fill,
+                                      // width: MediaQuery.of(context).size.width * .3,
+                                      // height: MediaQuery.of(context).size.height * .3,
+                                              
+                                      //        // placeholder: (context, url) => CircularProgressIndicator(),
+                                              
+                                      //   ),
+
+
+
+                                   )
+
+                                   
+                         :ClipRRect(
                                     borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .15 ),
                                      child: CachedNetworkImage(
                                       fit: BoxFit.fill,
@@ -134,7 +167,7 @@ class _ProfileChatState extends State<ProfileChat> {
                        ],
                      ),
                     
-                               Text(querydata["email"], style: TextStyle(fontWeight: FontWeight.bold),),
+                               Text(querydata!["email"], style: TextStyle(fontWeight: FontWeight.bold),),
                     
                                TextFormField(
 
@@ -259,11 +292,77 @@ class _ProfileChatState extends State<ProfileChat> {
         
         Text("Chose one option from below", textAlign: TextAlign.center,),
 
-        Row(children: [
-          ElevatedButton(onPressed: (){}, child: Image.asset("lib/assets/camura.jpg"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          
+          children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder()
+            ),
+            
+            onPressed: ()async{
+              ImagePicker imagePicker = new ImagePicker();
+          XFile? xFile = await imagePicker.pickImage(source: ImageSource.camera);
+         Uint8List uint8list = await returnByteUintFile(xFile!);
 
-               
-          )
+          setState(() {
+            uintFile = uint8list;
+            
+          });
+          
+           await storeChatProfileInstorage(uint8list);
+
+          Navigator.pop(context);
+
+
+            }, child:  SizedBox(
+              width: MediaQuery.of(context).size.width * .09,
+              height: MediaQuery.of(context).size.height * .09,
+
+
+              
+              child: Icon(Icons.camera)),
+
+              //  "lib/assets/ic_instagram.svg"
+          ),
+
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: CircleBorder()
+            ),
+            
+            onPressed: ()async{
+              ImagePicker imagePicker = ImagePicker();
+            XFile? xFile =  await imagePicker.pickImage(source: ImageSource.gallery);
+
+            Uint8List uint8list = await returnByteUintFile(xFile!);
+
+            setState(() {
+              uintFile = uint8list;
+             
+              
+              
+            });
+
+           await storeChatProfileInstorage(uint8list);
+            Navigator.pop(context);
+            
+           
+
+
+
+
+            }, child:  SizedBox(
+              width: MediaQuery.of(context).size.width * .09,
+              height: MediaQuery.of(context).size.height * .09,
+
+
+              
+              child: Center(child: Text("Gallery", textAlign: TextAlign.center,))),
+
+              //  "lib/assets/ic_instagram.svg"
+          ),
 
                                          
         ],)

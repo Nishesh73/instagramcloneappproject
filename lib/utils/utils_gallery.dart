@@ -14,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 
   if(xFile!=null){
 
-    // return File(xFile.path);
+   
    return await xFile.readAsBytes();
   
     }

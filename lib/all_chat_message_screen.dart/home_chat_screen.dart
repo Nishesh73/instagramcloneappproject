@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_profile.dart';
+import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_screen.dart';
 
 import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_user_model.dart';
 
@@ -19,6 +22,8 @@ class _HomeChatState extends State<HomeChat> {
 
   var dataUser;
   bool _isSearching = false;
+   List doctEmptyList = [];
+   List _searcHData = [];
 
  
 
@@ -53,6 +58,31 @@ class _HomeChatState extends State<HomeChat> {
             title: _isSearching?TextField(
           
               onChanged: (value){
+                _searcHData.clear();
+
+                for(var listData in doctEmptyList){
+                  if(listData["name"].contains(value) || listData["email"].contains(value)){
+
+                    
+
+                    
+
+                    _searcHData.add(listData);
+
+
+
+                  }
+
+                  
+                  
+                 
+
+
+                }
+
+                setState(() {
+                  _searcHData;
+                });
           
                 
               },
@@ -104,44 +134,56 @@ class _HomeChatState extends State<HomeChat> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance.collection("chatUser").where("id", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
                 builder: (BuildContext context, AsyncSnapshot snapshot){
+                  // List doctEmptyList = [];
+                  var docInFirebase = snapshot.data.docs;
+                  if(snapshot.hasData){
+
+                    for(var docData in docInFirebase){
+                      doctEmptyList.add(docData.data());
+
+
+                    }
+
+                  }
+
               
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data!.docs.length ,
+                    itemCount: _isSearching?_searcHData.length: doctEmptyList.length  ,
                     itemBuilder: (context, index) {
               
-                       dataUser = snapshot.data!.docs[index].data();
-              
-                      if(snapshot.hasData){
-          
-                         return Card(
-                          child: ListTile(
-                           // leading: Image.network(dataUser["image"]??""),
-                           leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .025 ),
-                             child: CachedNetworkImage(
-                              width: MediaQuery.of(context).size.width * .05,
-                              height: MediaQuery.of(context).size.height * .05,
-                                      imageUrl: dataUser["image"]??"",
-                                     // placeholder: (context, url) => CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                        return Card(
+                          child: InkWell(
+                            onTap: () =>  Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(chatUserData: doctEmptyList[index],))),
+                            child: ListTile(
+                             // leading: Image.network(dataUser["image"]??""),
+                             leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .025 ),
+                               child: CachedNetworkImage(
+                                fit: BoxFit.fill,
+                                width: MediaQuery.of(context).size.width * .05,
+                                height: MediaQuery.of(context).size.height * .05,
+                                        imageUrl: _isSearching?_searcHData[index]["image"] : doctEmptyList[index]["image"],
+                                       // placeholder: (context, url) => CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                  ),
+                             ),
+                              title: Text(_isSearching?_searcHData[index]["name"]: doctEmptyList[index]["name"]),
+                              subtitle: Text(_isSearching?_searcHData[index]["about"]: doctEmptyList[index]["about"]),
+                              // trailing: Text(dataUser["createdAt"]??""),
+                              trailing: Container(
+                                height: 15,
+                                width: 15,
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow,
+                                  borderRadius: BorderRadius.circular(7.5)
                                 ),
-                           ),
-                            title: Text(dataUser["name"]??""),
-                            subtitle: Text(dataUser["about"]??""),
-                            // trailing: Text(dataUser["createdAt"]??""),
-                            trailing: Container(
-                              height: 15,
-                              width: 15,
-                              decoration: BoxDecoration(
-                                color: Colors.yellow,
-                                borderRadius: BorderRadius.circular(7.5)
+                                
+                                
+                                
                               ),
-                              
-                              
-                              
+                                    
                             ),
-          
                           ),
           
                          );
@@ -150,22 +192,11 @@ class _HomeChatState extends State<HomeChat> {
                           
               
               
-                        
-                       
-              
+                
                       }
                       
-                              
-                     else{
-                          return Center(child: CircularProgressIndicator());
-              
-                   } 
-              
-                  
-              
-              
                       
-                    },
+   
                     
                     
                     
@@ -174,11 +205,13 @@ class _HomeChatState extends State<HomeChat> {
               
               
                 }),
+
+
+
             ),
           ),
           
-          // body: ChatCard() ,
-          
+
           
         ),
       ),
