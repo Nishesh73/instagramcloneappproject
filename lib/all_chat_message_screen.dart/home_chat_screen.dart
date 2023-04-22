@@ -135,8 +135,10 @@ class _HomeChatState extends State<HomeChat> {
                 stream: FirebaseFirestore.instance.collection("chatUser").where("id", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
                 builder: (BuildContext context, AsyncSnapshot snapshot){
                   // List doctEmptyList = [];
+                  
                   var docInFirebase = snapshot.data.docs;
                   if(snapshot.hasData){
+                    doctEmptyList.clear();
 
                     for(var docData in docInFirebase){
                       doctEmptyList.add(docData.data());
