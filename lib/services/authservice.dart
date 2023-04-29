@@ -102,9 +102,12 @@ class AuthService {
           ),
         ),
       );
-      } else
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("please add profile pic")));
+
+
+      }
+      
+       
+            
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));

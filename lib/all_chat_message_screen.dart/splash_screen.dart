@@ -9,13 +9,31 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  var opactityVal = 1.0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   navigateToSplash();
+
+  // _navigateToAnimateValue();
    
   }
+
+  // _navigateToAnimateValue(){
+
+  //   setState(() {
+  //     opactityVal = 0.0;
+      
+  //   });
+
+
+  // }
+
+  
+
+
 
   navigateToSplash()async{
     await  Future.delayed(Duration(microseconds: 2000),(){
@@ -34,7 +52,20 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
 
 
-      body: Text("Welcome to chat"),
+      body: Center(child: AnimatedOpacity(
+        opacity: opactityVal ,
+        duration: Duration(seconds: 5),
+
+
+
+        child: Text("Welcome to chat, a Splash screen.....",style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+          
+      
+        ),),
+      )),
 
 
     );

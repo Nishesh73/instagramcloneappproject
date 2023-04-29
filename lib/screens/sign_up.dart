@@ -27,7 +27,12 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: isLogin ? Text("SignIn") : Text("SignUp")),
+      
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        
+        
+        title: isLogin ? Text("SignIn") : Text("SignUp")),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -108,7 +113,7 @@ class _SignUpState extends State<SignUp> {
                                       color: Color.fromARGB(21, 0, 0, 0))),
                               hintText: "Enter username"),
                         ),
-                  Expanded(
+                  Flexible(
                     child: TextFormField(
                       validator: ((value) {
                         if (value!.isEmpty) return "invalid email";
@@ -137,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  Expanded(
+                  Flexible(
                     child: TextFormField(
                       obscureText: true,
                       validator: ((value) {
@@ -168,7 +173,9 @@ class _SignUpState extends State<SignUp> {
                     height: 15.0,
                   ),
                   isLogin
-                      ? Container()
+                      ? Container(
+                        height: 0.0,
+                      )
                       : TextFormField(
                           validator: ((value) {
                             if (value!.isEmpty) return "Empty bio";

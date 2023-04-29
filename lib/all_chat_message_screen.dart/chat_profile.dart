@@ -65,7 +65,7 @@ class _ProfileChatState extends State<ProfileChat> {
             Navigator.pop(context);
     
             //pop chatprofile
-          //  Navigator.pop(context);
+            Navigator.pop(context);
             //pop home screen
            // Navigator.pop(context);
             //pop splash
@@ -89,184 +89,186 @@ class _ProfileChatState extends State<ProfileChat> {
     
     
     
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("chatUser").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
-          
-          builder: (context, snapshot) {
-           
-            var querydata = snapshot.data;
-            return Center(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15,vertical: 0),
-                child: Form(
-                  key: _formKey ,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    
-                    children: [
-                     Stack(
-                       children: [
-
-                        uintFile!=null?ClipRRect(
-                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .15 ),
-                                     child: CircleAvatar(
-                                      radius: 64,
-
-                                      backgroundImage: MemoryImage(uintFile!),
-                                     ),
-
-                                      //   child: Image.file(
-                                      // File(imagePath!),
-
-                                      // fit: BoxFit.fill,
-                                      // width: MediaQuery.of(context).size.width * .3,
-                                      // height: MediaQuery.of(context).size.height * .3,
-                                              
-                                      //        // placeholder: (context, url) => CircularProgressIndicator(),
-                                              
-                                      //   ),
-
-
-
-                                   )
-
-                                   
-                         :ClipRRect(
-                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .15 ),
-                                     child: CachedNetworkImage(
-                                      fit: BoxFit.fill,
-                                      width: MediaQuery.of(context).size.width * .3,
-                                      height: MediaQuery.of(context).size.height * .3,
-                                              imageUrl: querydata!["image"]??"",
-                                             // placeholder: (context, url) => CircularProgressIndicator(),
-                                              errorWidget: (context, url, error) => Icon(Icons.error),
-                                        ),
-                                   ),
-                    
-                                   Positioned(
-                                    bottom: 2 ,
-                                    right: 5,
-                                     child: Container(
-                                      height: 16,
-                                      width: 16,
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow,
-                                        
-                                        borderRadius: BorderRadius.circular(8)),
-                                       child: MaterialButton(onPressed: (){
-
-
-                                              _showBottomSheetPlease();
-                                       },
-                                       
-                                       child: Icon(CupertinoIcons.pencil),
-                                                                    
+        body: SingleChildScrollView(
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection("chatUser").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
+            
+            builder: (context, snapshot) {
+             
+              var querydata = snapshot.data;
+              return Center(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15,vertical: 0),
+                  child: Form(
+                    key: _formKey ,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      
+                      children: [
+                       Stack(
+                         children: [
+        
+                          uintFile!=null?ClipRRect(
+                                      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .15 ),
+                                       child: CircleAvatar(
+                                        radius: 64,
+        
+                                        backgroundImage: MemoryImage(uintFile!),
                                        ),
+        
+                                        //   child: Image.file(
+                                        // File(imagePath!),
+        
+                                        // fit: BoxFit.fill,
+                                        // width: MediaQuery.of(context).size.width * .3,
+                                        // height: MediaQuery.of(context).size.height * .3,
+                                                
+                                        //        // placeholder: (context, url) => CircularProgressIndicator(),
+                                                
+                                        //   ),
+        
+        
+        
+                                     )
+        
+                                     
+                           :ClipRRect(
+                                      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .15 ),
+                                       child: CachedNetworkImage(
+                                        fit: BoxFit.fill,
+                                        width: MediaQuery.of(context).size.width * .3,
+                                        height: MediaQuery.of(context).size.height * .3,
+                                                imageUrl: querydata!["image"]??"",
+                                               // placeholder: (context, url) => CircularProgressIndicator(),
+                                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                          ),
                                      ),
-                                   )
-                       ],
-                     ),
-                    
-                               Text(querydata!["email"], style: TextStyle(fontWeight: FontWeight.bold),),
-                    
-                               TextFormField(
-
-                                validator: ((value) {
-                                  if(value!.isEmpty || value==null ){
-                                    return "Enter required field";
-                                  }
-                                  else return null;
-                                  
-                                }),
-                                onSaved: ((newValue) {
-                                  setState(() {
-                                    name = newValue??"";
+                      
+                                     Positioned(
+                                      bottom: 2 ,
+                                      right: 5,
+                                       child: Container(
+                                        height: 16,
+                                        width: 16,
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow,
+                                          
+                                          borderRadius: BorderRadius.circular(8)),
+                                         child: MaterialButton(onPressed: (){
+        
+        
+                                                _showBottomSheetPlease();
+                                         },
+                                         
+                                         child: Icon(CupertinoIcons.pencil),
+                                                                      
+                                         ),
+                                       ),
+                                     )
+                         ],
+                       ),
+                      
+                                 Text(querydata!["email"], style: TextStyle(fontWeight: FontWeight.bold),),
+                      
+                                 TextFormField(
+        
+                                  validator: ((value) {
+                                    if(value!.isEmpty || value==null ){
+                                      return "Enter required field";
+                                    }
+                                    else return null;
                                     
-                                  });
-                                  
-                                }),
-
-
-                                initialValue: querydata["name"] ,
-                                
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(CupertinoIcons.person),
-                                  
-                                  hintText: "ram shyam .....",
-                                  labelText: "Name",
-                    
-                                ),
-                    
-                                
-                    
-                    
-                               ),
-                               SizedBox(height:MediaQuery.of(context).size.height * 0.03),
-                    
-                                TextFormField(
-                                   validator: ((value) {
-                                  if(value!.isEmpty || value==null ){
-                                    return "Enter required field";
-                                  }
-                                  else return null;
-                                  
-                                }),
-                                onSaved: ((newValue) {
-                                  setState(() {
-                                    about = newValue??"";
+                                  }),
+                                  onSaved: ((newValue) {
+                                    setState(() {
+                                      name = newValue??"";
+                                      
+                                    });
                                     
-                                  });
+                                  }),
+        
+        
+                                  initialValue: querydata["name"] ,
                                   
-                                }),
-                                initialValue: querydata["about"] ,
-                                
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(CupertinoIcons.info),
-                                  
-                                  hintText: "ram shyam .....",
-                                  labelText: "About",
-                    
-                                ),
-                                ),
-                    
-                                SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.03,
-                                ),
-                    
-                                SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.1,
-                               
-                                  child: ElevatedButton.icon(onPressed: ()async{
-
-                                  if(_formKey.currentState!.validate()){
-                                    _formKey.currentState!.save();
-                                   await updateUserInfo(name, about);
-
-                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data is updated")));
-
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(CupertinoIcons.person),
                                     
-                                  }
-
-
-                                  }, icon: Icon(Icons.update),
-                                  style: ElevatedButton.styleFrom(
-                                    shape: StadiumBorder(),
-                                  )
-                                  , label: Text("update")),
-                                ),
-                    
-                    
-                    
-                    
-                  //  Image.network(querydata!["image"]),
-                    
-                    
-                  ],),
+                                    hintText: "ram shyam .....",
+                                    labelText: "Name",
+                      
+                                  ),
+                      
+                                  
+                      
+                      
+                                 ),
+                                 SizedBox(height:MediaQuery.of(context).size.height * 0.03),
+                      
+                                  TextFormField(
+                                     validator: ((value) {
+                                    if(value!.isEmpty || value==null ){
+                                      return "Enter required field";
+                                    }
+                                    else return null;
+                                    
+                                  }),
+                                  onSaved: ((newValue) {
+                                    setState(() {
+                                      about = newValue??"";
+                                      
+                                    });
+                                    
+                                  }),
+                                  initialValue: querydata["about"] ,
+                                  
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(CupertinoIcons.info),
+                                    
+                                    hintText: "ram shyam .....",
+                                    labelText: "About",
+                      
+                                  ),
+                                  ),
+                      
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height * 0.03,
+                                  ),
+                      
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height * 0.1,
+                                 
+                                    child: ElevatedButton.icon(onPressed: ()async{
+        
+                                    if(_formKey.currentState!.validate()){
+                                      _formKey.currentState!.save();
+                                     await updateUserInfo(name, about);
+        
+                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Data is updated")));
+        
+                                      
+                                    }
+        
+        
+                                    }, icon: Icon(Icons.update),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: StadiumBorder(),
+                                    )
+                                    , label: Text("update")),
+                                  ),
+                      
+                      
+                      
+                      
+                    //  Image.network(querydata!["image"]),
+                      
+                      
+                    ],),
+                  ),
                 ),
-              ),
-            );
-          
-        },),
+              );
+            
+          },),
+        ),
     
        
     

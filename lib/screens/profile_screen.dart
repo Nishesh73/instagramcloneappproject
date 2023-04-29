@@ -6,7 +6,7 @@ import 'package:instagramcloneapp/responsive/responsivelayout.dart';
 import 'package:instagramcloneapp/responsive/web_screen.dart';
 import 'package:instagramcloneapp/screens/sign_up.dart';
 import 'package:instagramcloneapp/services/firestore_methods.dart';
-import 'package:instagramcloneapp/widgets/follow_button.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final userId;
@@ -88,7 +88,8 @@ setState(() {
         
         children: [
 
-          Column(children: [
+          Column(
+            children: [
           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,17 +106,14 @@ setState(() {
           
           
             ],),
-            GestureDetector
-            (
-              onTap: (() {
-                FirestoreMethods().logOut();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ResponSive(webScreenLayout: WebScreenLayout(),
-                mobileScreenLayout: MobileScreen(),)));
+            InkWell(
+              onTap: ()async {
+              await  FirebaseAuth.instance.signOut();
                 
-              }),
+              },
               child: Container(
                 child: Text("Sing out"),
-            
+              
                
               ),
             )
@@ -125,7 +123,7 @@ setState(() {
 
           
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  Container(
           child: Text( userData["userName"],style: TextStyle(fontWeight: FontWeight.bold),),
@@ -141,35 +139,53 @@ setState(() {
           
             Divider(color: Colors.yellow,),
           
-            FutureBuilder(
-              future: FirebaseFirestore.instance.collection("posts").where("id", isEqualTo: widget.userId).get(),
-              builder: ((context, snapshot) {
-          
-                if(snapshot.hasData){
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: ((context, index) {
-          
-                      return Container(
-                        height: 50.0,
-                        child: ListTile(
-                          title: Text(snapshot.data!.docs[index]["userName"]),
-                         
-                          
-                          // leading: Image.network(snapshot.data!.docs[index]["postUrl"])
-                          
-                          ),
-                      );
+            Container(
+              height: 800,
+           
+              width: double.infinity,
+              child: FutureBuilder(
+                future: FirebaseFirestore.instance.collection("posts").where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid.toString()).get(),
+                builder: ((context, snapshot) {
                       
-                    }));
-          
-                
-          
-                }
-                return Text("Loading......");
-          
-                
-              }))
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      // shrinkWrap: true,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: ((context, index) {
+                      
+                        return Container(
+                          height: 50,
+                          width: 50,
+                          margin: EdgeInsets.only(top: 10.0),
+                          
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            
+                            
+                           
+                          ),
+                          child: ListTile(
+                            
+                           
+                            
+                             leading: Image.network(snapshot.data!.docs[index]["postUrl"],
+                             
+                             fit: BoxFit.fill,)
+                             
+                            
+                            ),
+                        );
+                          
+                      }));
+                      
+                  
+                      
+                  }
+                  return Text("Loading......");
+                      
+                  
+                })),
+            )
           
             
           

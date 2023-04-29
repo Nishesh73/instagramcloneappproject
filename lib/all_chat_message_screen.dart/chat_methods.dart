@@ -53,4 +53,8 @@ await FirebaseFirestore.instance
   }
 
 
+chatScreenMultiImagePicker(){
 
+
+  
+}
