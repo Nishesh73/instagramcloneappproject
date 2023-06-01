@@ -26,6 +26,8 @@ class AuthService {
 
         return Users.map_Data_of_FirestoreToRequiredData(documentSnapshot);
         }
+
+
         
   signUp(
       {required String userName,
@@ -34,8 +36,16 @@ class AuthService {
       required String bio,
       required Uint8List uintFile,
       required BuildContext context}) async {
+
+    
+
+
     try {
-      if (uintFile != null) {
+    
+      
+      
+      
+  
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
 
@@ -95,6 +105,7 @@ class AuthService {
             .showSnackBar(SnackBar(content: Text("successful")));
               Navigator.push(
         context,
+        
         MaterialPageRoute(
           builder: (context) => ResponSive(
             mobileScreenLayout: MobileScreen(),
@@ -104,7 +115,9 @@ class AuthService {
       );
 
 
-      }
+      
+
+      
       
        
             
@@ -114,10 +127,18 @@ class AuthService {
     }
   }
 
+
+
+
+
+
   signIn(
       {required String email,
       required String password,
       required BuildContext context}) async {
+
+        
+
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
@@ -139,4 +160,8 @@ class AuthService {
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
+
+
+
+
 }

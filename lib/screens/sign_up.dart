@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagramcloneapp/responsive/mobile_screen.dart';
 import 'package:instagramcloneapp/responsive/responsivelayout.dart';
 import 'package:instagramcloneapp/responsive/web_screen.dart';
+import 'package:instagramcloneapp/screens/login_screen.dart';
 import 'package:instagramcloneapp/services/authservice.dart';
 import 'package:instagramcloneapp/utils/colors.dart';
 import 'package:instagramcloneapp/utils/utils_gallery.dart';
@@ -20,19 +21,21 @@ class _SignUpState extends State<SignUp> {
   Uint8List? uint8list;
   AuthService authService = AuthService();
   String username = "", email = "", password = "", bio = "";
-  bool isLogin = false;
-  bool isLoading = false;
-  GlobalKey<FormState> _formKey = new GlobalKey();
+ 
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       
       appBar: AppBar(
         automaticallyImplyLeading: false,
         
         
-        title: isLogin ? Text("SignIn") : Text("SignUp")),
+        title: Text("SignUp")),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -52,12 +55,12 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  isLogin
-                      ? Container()
-                      : Stack(
+                   Stack(
                           children: [
                             uint8list != null
-                                ? CircleAvatar(
+                                ?
+                                
+                                 CircleAvatar(
                                     backgroundImage: MemoryImage(uint8list!),
                                     radius: 64,
                                   )
@@ -85,9 +88,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     height: 10,
                   ),
-                  isLogin
-                      ? Container()
-                      : TextFormField(
+                  TextFormField(
                           validator: ((value) {
                             if (value!.isEmpty)
                               return "please provide username";
@@ -172,11 +173,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     height: 15.0,
                   ),
-                  isLogin
-                      ? Container(
-                        height: 0.0,
-                      )
-                      : TextFormField(
+                  TextFormField(
                           validator: ((value) {
                             if (value!.isEmpty) return "Empty bio";
 
@@ -204,8 +201,8 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     height: 15.0,
                   ),
-                  isLoading
-                      ? CircularProgressIndicator()
+                  _isLoading
+                      ? Center(child: CircularProgressIndicator())
                       : Container(
                           width: double.infinity,
                           height: 50.0,
@@ -214,55 +211,57 @@ class _SignUpState extends State<SignUp> {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
 
+       if (uint8list == null){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("please provide userphoto")));
+
+      }
+
+
+       else{
                                   setState(() {
-                                    isLoading = true;
+                                    _isLoading = true;
                                   });
 
-                                  isLogin
-                                      ? authService.signIn(
-                                          email: email,
-                                          password: password,
-                                          context: context)
-                                      : authService.signUp(
+                                   authService.signUp(
                                           userName: username,
                                           email: email,
                                           password: password,
                                           bio: bio,
                                           uintFile: uint8list!,
                                           context: context);
+                                          
 
                                   setState(() {
-                                    isLoading = false;
+                                    _isLoading = false;
                                   });
+       }
                                 }
                               },
                               child:
-                                  isLogin ? Text("LogIn") : Text("Sign up"))),
+                                  Text("Sign up"))),
                   const SizedBox(
                     height: 15.0,
                   ),
                   InkWell(
                       onTap: (() {
-                        setState(() {
-                          isLogin = !isLogin;
-                        });
+                    
 
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => ResponSive(
-                        //               mobileScreenLayout: MobileScreen(),
-                        //               webScreenLayout: WebScreenLayout(),
-                        //             )));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LogInScreen()
+                                
+                                
+                                    
+                                    ));
 
 
 
                       }),
 
                       child: Container(
-                        child: isLogin
-                            ? Text("Don't have an account? proceed for singup")
-                            : Text("Already signup? proceed for login"),
+                        child:
+                            Text("Already signup? proceed for login"),
                       ))
                 ],
               ),
@@ -270,6 +269,13 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       ),
+
+
+
     );
+
+
+
+
   }
 }
