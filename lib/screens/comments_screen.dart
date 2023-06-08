@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramcloneapp/model/usermodel.dart';
 import 'package:instagramcloneapp/providers/user_provider.dart';
+import 'package:instagramcloneapp/screens/feed_screen.dart';
 import 'package:instagramcloneapp/services/firestore_methods.dart';
+import 'package:instagramcloneapp/utils/colors.dart';
 import 'package:instagramcloneapp/widgets/comments_card.dart';
+import 'package:instagramcloneapp/widgets/post_card.dart';
 import 'package:provider/provider.dart';
 
 class CommentsScreen extends StatefulWidget {
@@ -24,11 +28,15 @@ class _CommentsScreenState extends State<CommentsScreen> {
    // Users? users = Provider.of<UserProvider>(context).getUsers;
     return Scaffold
     (
+
+    
+
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
         .collection("posts")
         .doc(widget.snap["postId"])
         .collection("comments")
+        .limit(3)
         .orderBy("datePublished", descending: true)
         .snapshots()
         ,
@@ -55,7 +63,16 @@ class _CommentsScreenState extends State<CommentsScreen> {
       
     //  CommentsCard(),
 
-      appBar: AppBar(title: Text("Comments Screen")),
+      appBar: AppBar(title: Text("Comments Screen"),
+      backgroundColor: mobileBackgroundColor,
+      
+      // leading: IconButton(onPressed: (){
+      //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FeedScreen()));
+
+      // }, icon: Icon(Icons.arrow_back)
+      // ),
+      
+      ),
 
       bottomNavigationBar: Container(
         alignment: Alignment.bottomCenter,
@@ -80,7 +97,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
               }),
               decoration: InputDecoration(
                 border: InputBorder.none,
-              hintText: "Comment as ${widget.snap["userName"]} "
+              hintText: "Comment in post of ${widget.snap["userName"]} "
               ),
             ),
           ),
@@ -89,8 +106,38 @@ class _CommentsScreenState extends State<CommentsScreen> {
           Expanded(
             child: IconButton(onPressed: ()async
             {
+            
+
 
             await  FirestoreMethods().commentPost(widget.snap["postId"], widget.snap["userName"], description, widget.snap["profImage"], widget.snap["uid"]);
+           
+
+
+          //feedactivity comment
+          if(FirebaseAuth.instance.currentUser!.uid != widget.snap["uid"]){
+
+           await FirebaseFirestore.instance.collection("activityfeed")
+         .doc(widget.snap["uid"])
+         .collection("feedItems")
+         .add({
+          "name": currentUserName,
+
+        
+          "commentData": description,
+           "timeStamp": Timestamp.now(),
+          "postId": widget.snap["postId"],
+          "type": "comment",
+
+          "userId": currentUserId,
+          "postImage": widget.snap["postUrl"],
+          "profileImage": currentUserProfile, 
+
+
+
+
+         });
+          }
+         
 
             setState(() {
               description = "";

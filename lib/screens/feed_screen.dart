@@ -34,31 +34,60 @@ class FeedScreen extends StatelessWidget {
 
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("posts").snapshots(),
+
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          
 
-          // if(snapshot.connectionState == ConnectionState.active)
-          //  
-          if(snapshot.hasData){
+            if(snapshot.connectionState == ConnectionState.waiting){
+          return Center(child: CircularProgressIndicator());
+        }
 
-            return ListView.builder(
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (context, index) {
+       
+       else if(snapshot.data.docs.length==0){
+            return Center(child: Text("No post at all"));
 
 
-                return PostCard(
-                  snap: snapshot.data?.docs[index].data(),
-                );
-                
-              });
 
           }
-          // else 
           
-          //  return Center(child: Text("${snapshot.error}"));
-         else return Center(child: CircularProgressIndicator());
+
+        // else if(snapshot.connectionState == ConnectionState.active){
+          
+       else if(snapshot.hasData){
+
+            return Container(
+              width: MediaQuery.of(context).size.width * .95,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data?.docs.length,
+                itemBuilder: (context, index) {
+
+
+                  return PostCard(
+                    snap: snapshot.data?.docs[index].data(),
+                  );
+                  
+                }),
+            );
+
+          }
+
+        // }
+
+      
         
-      },)
+          
+          
+         
+        return Container();
+        
+      }
+      // else return Center(child: Text("No post at all"));
+      
+      ,
+      
+      
+      
+      )
     );
   }
 }

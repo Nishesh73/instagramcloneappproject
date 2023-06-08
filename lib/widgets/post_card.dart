@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:instagramcloneapp/model/usermodel.dart';
 import 'package:instagramcloneapp/providers/user_provider.dart';
@@ -7,6 +8,10 @@ import 'package:instagramcloneapp/services/firestore_methods.dart';
 import 'package:instagramcloneapp/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+var currentUserName;
+  var currentUserProfile;
+  var currentUserId;
 
 class PostCard extends StatefulWidget {
   
@@ -21,6 +26,7 @@ class _PostCardState extends State<PostCard> {
   int length = 0;
   bool isLikeAnimation = false;
   bool isLoading = false;
+  
 
   @override
   void initState() { 
@@ -33,6 +39,14 @@ class _PostCardState extends State<PostCard> {
     setState(() {
       isLoading = true;
     });
+
+   var documentSnapshot = await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get();
+
+   currentUserName = documentSnapshot.data()!["userName"];
+  currentUserProfile = documentSnapshot.data()!["photoUrl"];
+  currentUserId = documentSnapshot.data()!["id"];
+
+
 
    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("posts")
     .doc(widget.snap["postId"])
@@ -129,7 +143,9 @@ class _PostCardState extends State<PostCard> {
                  setState(() {
                   isLikeAnimation = true;
                 });
-                await FirestoreMethods().likePost(widget.snap["postId"], widget.snap["uid"], widget.snap["likes"], widget.snap["userName"]);
+
+
+                await FirestoreMethods().likePost(widget.snap["postId"], widget.snap["uid"], widget.snap["likes"], widget.snap["userName"], widget.snap["profImage"], widget.snap["postUrl"]);
 
 
                
@@ -177,7 +193,7 @@ class _PostCardState extends State<PostCard> {
                 IconButton(
                     onPressed: ()async {
                       
-                       await FirestoreMethods().likePost(widget.snap["postId"], widget.snap["uid"], widget.snap["likes"], widget.snap["userName"] );
+                       await FirestoreMethods().likePost(widget.snap["postId"], widget.snap["uid"], widget.snap["likes"], widget.snap["userName"], widget.snap["profImage"], widget.snap["postUrl"] );
                       
                      
                     },

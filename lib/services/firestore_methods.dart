@@ -6,10 +6,95 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramcloneapp/model/post_model.dart';
 import 'package:instagramcloneapp/services/storage_methods.dart';
-import 'package:instagramcloneapp/widgets/like_notify_card.dart';
+import 'package:instagramcloneapp/widgets/post_card.dart';
+
 import 'package:uuid/uuid.dart';
 
 class FirestoreMethods{
+
+
+  followUnfollowUser(String currentLoginUserid, String userSpecific_or_FollowId)async{
+
+  DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).get();
+  var userIdSpecificFollowList = documentSnapshot.get("followers");
+
+
+
+  if(!userIdSpecificFollowList.contains(currentLoginUserid)){
+
+    FirebaseFirestore.instance.collection("users").doc(currentLoginUserid).update({
+      "following": FieldValue.arrayUnion([userSpecific_or_FollowId])
+
+    });
+
+     FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).update({
+      "followers": FieldValue.arrayUnion([currentLoginUserid])
+
+    });
+
+
+  }
+
+  else{
+
+     FirebaseFirestore.instance.collection("users").doc(currentLoginUserid).update({
+      "following": FieldValue.arrayRemove([userSpecific_or_FollowId])
+
+    });
+
+     FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).update({
+      "followers": FieldValue.arrayRemove([currentLoginUserid])
+
+    });
+
+
+
+
+  }
+
+  // if(userIdSpecificFollowList.contains(currentLoginUserid)){
+  //   FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).update({
+  //     "followers": FieldValue.arrayRemove([currentLoginUserid])
+
+  //   });
+
+  //    FirebaseFirestore.instance.collection("users").doc(currentLoginUserid).update({
+  //     "following": FieldValue.arrayRemove([userSpecific_or_FollowId])
+
+  //   });
+
+
+  // }
+  // else{
+  //    FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).update({
+
+  //     "followers": FieldValue.arrayUnion([currentLoginUserid])
+
+  //   });
+
+  //    FirebaseFirestore.instance.collection("users").doc(currentLoginUserid).update({
+  //     "following": FieldValue.arrayUnion([userSpecific_or_FollowId])
+
+  //   });
+
+
+
+
+
+  // }
+
+
+
+
+
+
+  }
+
+
+
+
+
+
 
   uploadPost(String description, Uint8List file,
   String uid, String userName, String profImage
@@ -25,7 +110,7 @@ class FirestoreMethods{
        uid: uid, 
        userName: userName, 
        postId: postId, 
-       datePublished: DateTime.now(), 
+       datePublished: Timestamp.now(), 
        postUrl: postPhotoUrl, 
        profImage: profImage, 
        likes: []);
@@ -43,29 +128,70 @@ class FirestoreMethods{
 
   }
 
-likePost(String postId, String userId, List likes, String userName)async{
+likePost(String postId, String userId, List likes, String userName, String profImage, String postUrl)async{
 
     try {
       if(likes.contains(userId)){
-        LikeNotify(userName: userName);
+        // LikeNotify(userName: userName);
 
 
-      return await FirebaseFirestore.instance.collection("posts").doc(postId).update({
+       await FirebaseFirestore.instance.collection("posts").doc(postId).update({
           "likes": FieldValue.arrayRemove([userId])
 
 
         });
 
+        
+        if(FirebaseAuth.instance.currentUser!.uid != userId){
+
+         await FirebaseFirestore.instance.collection("activityfeed")
+         .doc(userId)
+         .collection("feedItems")
+         .doc(postId)
+         .delete();
+
+        }
+
+
+
+
+
+
       }
 
       else{
-        userName = "No one";
 
 
-       LikeNotify(userName: userName,);
-        return await FirebaseFirestore.instance.collection("posts").doc(postId).update({
+        
+        await FirebaseFirestore.instance.collection("posts").doc(postId).update({
           "likes": FieldValue.arrayUnion([userId])
          });
+
+         //for add like feed activity
+         
+         if(FirebaseAuth.instance.currentUser!.uid != userId){
+         await FirebaseFirestore.instance.collection("activityfeed")
+         .doc(userId)
+         .collection("feedItems")
+         .doc(postId)
+         .set({
+          "timeStamp": Timestamp.now(),
+          "postId": postId,
+          "type": "like",
+          "name": currentUserName,
+
+          "currentUserId": currentUserId,
+          "postImage": postUrl,
+          "profileImage": currentUserProfile , 
+
+
+         });
+
+         }
+
+
+
+
       }
 
 
@@ -93,7 +219,7 @@ likePost(String postId, String userId, List likes, String userName)async{
         "comment": text,
         "userId": userId,
         "profilePic": profileImage,
-        "datePublished": DateTime.now()
+        "datePublished": Timestamp.now()
        
 
       });

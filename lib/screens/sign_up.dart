@@ -33,6 +33,7 @@ class _SignUpState extends State<SignUp> {
       
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: mobileBackgroundColor,
         
         
         title: Text("SignUp")),

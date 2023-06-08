@@ -29,6 +29,7 @@ class _LogInScreenState extends State<LogInScreen> {
       
       appBar: AppBar(
         automaticallyImplyLeading: false,
+         backgroundColor: mobileBackgroundColor,
         
         
         title: Text("SignIn")),

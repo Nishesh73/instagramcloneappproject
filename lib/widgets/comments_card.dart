@@ -27,7 +27,10 @@ class _CommentsCardState extends State<CommentsCard> {
           children: [
           RichText(text: TextSpan(
             children: [
-              TextSpan(text: "${widget.snapSubCol["userName"]} ",style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: "${widget.snapSubCol["userName"]} ",style: TextStyle(fontWeight: FontWeight.bold,
+              fontSize: 30, color: Colors.white
+              
+              )),
               
               
              TextSpan(text: '${widget.snapSubCol["comment"]}',),
@@ -48,7 +51,7 @@ class _CommentsCardState extends State<CommentsCard> {
 
         ],),
 
-        Expanded(child: IconButton(onPressed: (){}, icon: Icon(Icons.favorite))),
+        // Expanded(child: IconButton(onPressed: (){}, icon: Icon(Icons.favorite))),
 
 
       ],) ,
