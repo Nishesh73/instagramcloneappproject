@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagramcloneapp/widgets/post_card.dart';
 import 'package:intl/intl.dart';
 
 class CommentsCard extends StatefulWidget {
@@ -17,7 +18,7 @@ class _CommentsCardState extends State<CommentsCard> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
-            backgroundImage: NetworkImage("${widget.snapSubCol["profilePic"]}"),
+            backgroundImage: NetworkImage(currentUserProfile!),
 
           ),
         ),
@@ -27,13 +28,14 @@ class _CommentsCardState extends State<CommentsCard> {
           children: [
           RichText(text: TextSpan(
             children: [
-              TextSpan(text: "${widget.snapSubCol["userName"]} ",style: TextStyle(fontWeight: FontWeight.bold,
-              fontSize: 30, color: Colors.white
+              TextSpan(text: currentUserName,style: TextStyle(fontWeight: FontWeight.bold,
+              fontSize: 18, color: Colors.white
               
               )),
               
               
-             TextSpan(text: '${widget.snapSubCol["comment"]}',),
+             TextSpan(text: ' ${widget.snapSubCol["comment"]}',
+             style: TextStyle(color: Colors.yellow)),
 
 
               
@@ -45,14 +47,13 @@ class _CommentsCardState extends State<CommentsCard> {
           Text(
             DateFormat.yMMMd().format(widget.snapSubCol["datePublished"].toDate())
             
-           // widget.snapSubCol["datePublished"]
+         
             
             ),
 
         ],),
 
-        // Expanded(child: IconButton(onPressed: (){}, icon: Icon(Icons.favorite))),
-
+      
 
       ],) ,
       

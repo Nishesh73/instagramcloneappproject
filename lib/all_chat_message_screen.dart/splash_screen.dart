@@ -17,20 +17,11 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   navigateToSplash();
 
-  // _navigateToAnimateValue();
+ 
    
   }
 
-  // _navigateToAnimateValue(){
-
-  //   setState(() {
-  //     opactityVal = 0.0;
-      
-  //   });
-
-
-  // }
-
+ 
   
 
 

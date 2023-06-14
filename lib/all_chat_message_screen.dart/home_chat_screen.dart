@@ -5,10 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:instagramcloneapp/all_chat_message_screen.dart/addfriend_screen.dart';
 import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_profile.dart';
-import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_screen.dart';
+import 'package:instagramcloneapp/all_chat_message_screen.dart/notification_chat.dart';
+import 'package:instagramcloneapp/all_chat_message_screen.dart/reqaccept_decline.dart';
 
-import 'package:instagramcloneapp/all_chat_message_screen.dart/chat_user_model.dart';
+
+
 import 'package:instagramcloneapp/screens/sign_up.dart';
 
 
@@ -25,6 +28,15 @@ class _HomeChatState extends State<HomeChat> {
   bool _isSearching = false;
    List doctEmptyList = [];
    List _searcHData = [];
+
+   bool isLoading = true;
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isLoading = false;
+  }
 
  
 
@@ -52,7 +64,24 @@ class _HomeChatState extends State<HomeChat> {
           
         }),
 
-        child: Scaffold(
+        child: isLoading?CircularProgressIndicator() :  Scaffold(
+          backgroundColor: Colors.blue,
+          bottomNavigationBar: Row(
+            
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddFriend()));
+
+
+              }, icon: Icon(Icons.group_add)),
+
+              IconButton(onPressed: (){
+                 Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationChatt()));
+                
+              }, icon: Icon(Icons.notifications_on)),
+            ],
+          ),
           
           appBar: AppBar(
 
@@ -70,7 +99,7 @@ class _HomeChatState extends State<HomeChat> {
                 _searcHData.clear();
 
                 for(var listData in doctEmptyList){
-                  if(listData["name"].contains(value) || listData["email"].contains(value)){
+                  if(listData["name"]??"".contains(value) || listData["email"]??"".contains(value)){
 
                     
 
@@ -139,14 +168,14 @@ class _HomeChatState extends State<HomeChat> {
 
 
           },
-          child: Icon(CupertinoIcons.add),
+          child: Icon(Icons.logout),
           
           ),
           
           body: StreamBuilder(
             stream: FirebaseFirestore.instance.collection("chatUser").where("id", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
             builder: (BuildContext context, AsyncSnapshot snapshot){
-              // List doctEmptyList = [];
+              
               
               var docInFirebase = snapshot.data.docs;
               if(snapshot.hasData){
@@ -168,23 +197,28 @@ class _HomeChatState extends State<HomeChat> {
           
                     return Card(
                       child: InkWell(
-                        onTap: () =>  Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(chatUserData: doctEmptyList[index],))),
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendRequestPage(snap: doctEmptyList[index] ,)));
+
+
+                        },
+                       
                         child: ListTile(
-                         // leading: Image.network(dataUser["image"]??""),
+                         
                          leading: ClipRRect(
                           borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * .025 ),
                            child: CachedNetworkImage(
                             fit: BoxFit.fill,
                             width: MediaQuery.of(context).size.width * .05,
                             height: MediaQuery.of(context).size.height * .05,
-                                    imageUrl: _isSearching?_searcHData[index]["image"] : doctEmptyList[index]["image"],
-                                   // placeholder: (context, url) => CircularProgressIndicator(),
+                                    imageUrl: _isSearching?_searcHData[index]["image"]??"" : doctEmptyList[index]["image"]??"",
+                                   
                                     errorWidget: (context, url, error) => Icon(Icons.error),
                               ),
                          ),
-                          title: Text(_isSearching?_searcHData[index]["name"]: doctEmptyList[index]["name"]),
-                          subtitle: Text(_isSearching?_searcHData[index]["about"]: doctEmptyList[index]["about"]),
-                          // trailing: Text(dataUser["createdAt"]??""),
+                          title: Text(_isSearching?_searcHData[index]["name"]??"": doctEmptyList[index]["name"]??""),
+                          subtitle: Text(_isSearching?_searcHData[index]["about"]??"": doctEmptyList[index]["about"]??""),
+                          
                           trailing: Container(
                             height: 15,
                             width: 15,

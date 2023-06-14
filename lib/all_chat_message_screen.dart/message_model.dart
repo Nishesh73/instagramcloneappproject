@@ -34,19 +34,6 @@ class MessageModel{
     };
  }
 
-//  static MessageModel maptoRequiredData(){
-
-//   return MessageModel(toId: toId, 
-//   fromId: fromId, 
-//   sentTime: sentTime, 
-//   readTime: readTime, 
-//   message: message, 
-//   messageType: 
-//   messageType);
-
-
-
-//  }
 
 
 

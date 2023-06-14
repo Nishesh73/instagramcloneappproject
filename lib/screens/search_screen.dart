@@ -66,40 +66,46 @@ class _SearchScreenState extends State<SearchScreen> {
 
             if(searchQuery.isEmpty){
 
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(userId: userSpecificId))),
-                  child: ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
 
-                      child: Container(
-                        height: 40,
-                        width: 40,
+            //   return Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: GestureDetector(
+            //       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(userId: userSpecificId))),
+            //       child: ListTile(
+            //         leading: ClipRRect(
+            //           borderRadius: BorderRadius.all(Radius.circular(20)),
+
+            //           child: Container(
+            //             height: 40,
+            //             width: 40,
                       
                        
                                       
                        
                         
-                        child: Image.network(
+            //             child: Image.network(
                           
                           
-                          querySnapshot["photoUrl"],
-                          fit: BoxFit.fill,
+            //               querySnapshot["photoUrl"],
+            //               fit: BoxFit.fill,
                           
-                          ),
+            //               ),
                         
                         
                         
-                        ),
-                    ),
-                    title: Text(querySnapshot["userName"]),
+            //             ),
+            //         ),
+            //         title: Text(querySnapshot["userName"]),
                 
-                  ),
-                ),
-              );
-            }
+            //       ),
+            //     ),
+            //   );
+
+            return Text("");
+             }
+
+
+
 
             else if(querySnapshot["userName"].toString().toLowerCase().startsWith(searchQuery.toLowerCase())){
                return Padding(

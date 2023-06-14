@@ -1,11 +1,16 @@
 
 
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagramcloneapp/screens/feed_screen.dart';
+import 'package:instagramcloneapp/screens/sign_up.dart';
 import 'package:instagramcloneapp/services/authservice.dart';
 import 'package:instagramcloneapp/services/firestore_methods.dart';
 import 'package:instagramcloneapp/utils/colors.dart';
+import 'package:instagramcloneapp/widgets/show_fullscreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final userId;
@@ -52,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 //if specific user id's followers contains current user id 
  isFollowing = docuForusers.get("followers").contains(FirebaseAuth.instance.currentUser!.uid);
-// follwingLength = docuForusers.data()!["following"];
+
 
 
 
@@ -77,6 +82,12 @@ setState(() {
   Widget build(BuildContext context) {
     return isLoading?Center(child: CircularProgressIndicator()) : Scaffold(
       appBar: AppBar(
+        // actions: [IconButton(onPressed: (){
+        //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FeedScreen()));
+
+        // }, icon: Icon(Icons.arrow_back_ios))
+        // ],
+
         title: Text(userName!),
         backgroundColor: mobileBackgroundColor,
 
@@ -132,7 +143,13 @@ setState(() {
 
               FirebaseAuth.instance.currentUser!.uid == widget.userId?
               ElevatedButton(onPressed: (() async {
-                   await FirestoreMethods().logOut();
+
+                if(FirebaseAuth.instance.currentUser!.uid != null ){
+
+                   await FirestoreMethods().logOut(context);
+                  
+                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUp() ));
+                }
                   }), child: Text("Sign out"))
               :
               
@@ -145,6 +162,8 @@ setState(() {
 
                 setState(() {
                   isFollowing = false;
+                   followersLength = followersLength - 1;
+            
 
               
                   
@@ -161,7 +180,9 @@ setState(() {
 
                 setState(() {
                   isFollowing = true;
-                
+                   followersLength = followersLength + 1;
+
+                                 
                   
                 });
 
@@ -204,7 +225,7 @@ setState(() {
                     return Center(child: CircularProgressIndicator());
                   }
                    else if(snapshot.data!.docs.length == 0){
-                    return Text("no post data");
+                    return Center(child: Text("no post data"));
 
 
                   }
@@ -219,20 +240,31 @@ setState(() {
                         itemCount: snapshot.data!.docs.length,
                         
                         itemBuilder: ((context, index) {
+                          var querySnapshot = snapshot.data!.docs[index].data();
                          
                          
 
 
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
-                            child: Image.network(
-                              
-                              
-                              snapshot.data!.docs[index].data()["postUrl"],
-                              fit: BoxFit.cover,
-                              
-                              
-                              ),
+                            child: GestureDetector(
+                              onTap: (() {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ShowFullScreen(
+                                  userId: querySnapshot["uid"],
+                                  postId: querySnapshot["postId"],
+
+                                )));
+                                
+                              }),
+                              child: Image.network(
+                                
+                                
+                                snapshot.data!.docs[index].data()["postUrl"],
+                                fit: BoxFit.cover,
+                                
+                                
+                                ),
+                            ),
                           );
 
                           

@@ -48,14 +48,7 @@ class Posts {
       profImage: snapshot.get("profImage"), 
       likes: snapshot.get("likes")
       
-    //   description: (snapshot.data() as Map<String, dynamic>)["description"],
-    //  uid: (snapshot.data() as Map<String, dynamic>)["uid"], 
-    //  userName: (snapshot.data() as Map<String, dynamic>)["userName"],
-    //   postId: (snapshot.data() as Map<String, dynamic>)["postId"], 
-    //   datePublished: (snapshot.data() as Map<String, dynamic>)["datePublished"], 
-    //   postUrl: (snapshot.data() as Map<String, dynamic>)["postUrl"], 
-    //   profImage: (snapshot.data() as Map<String, dynamic>)["profImage"], 
-    //   likes: (snapshot.data() as Map<String, dynamic>)["likes"]);
+   
     );
 
 

@@ -30,11 +30,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         body: FutureBuilder(
           future: FirebaseFirestore.instance
           .collection("activityfeed")
-          // .where("userId", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("feedItems")
-          // .limit(1)
-          // .orderBy("timeStamp", descending: true)
+          .limit(2)
+          .orderBy("timeStamp", descending: true)
           .get(),
           
           builder: ((context, snapshot) {
@@ -48,10 +48,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
             }
 
-        //  else if(snapshot.data!.docs.length == 0){
-        //   return Text("nothign to show");
+         else if(snapshot.data!.docs.length == 0){
+          return Center(child: Text("nothign to show"));
 
-        //     }
+            }
 
             return Container(
               width: MediaQuery.of(context).size.width * .95,
@@ -63,16 +63,17 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   var dataFromQuery = snapshot.data!.docs[index].data();
 
                   // return Text(dataFromQuery["name"]);
+                  print("curent user id is ${dataFromQuery["currentUserId"]}");
 
                   return  ActivityFeed(
-                    currnetUserName: dataFromQuery["name"],
-                    type: dataFromQuery["type"],
-                    timestamp: dataFromQuery["timeStamp"],
-                    commentData: dataFromQuery["commentData"],
-                    postId: dataFromQuery["postId"],
-                    userId: dataFromQuery["currentUserId"],
-                    postImage: dataFromQuery["postImage"],
-                    profileImage: dataFromQuery["profileImage"],
+                    currnetUserName: dataFromQuery["name"]??"",
+                    type: dataFromQuery["type"]??"",
+                    timestamp: dataFromQuery["timeStamp"]??"",
+                    commentData: dataFromQuery["commentData"]??"",
+                    postId: dataFromQuery["postId"]??"",
+                    userId: dataFromQuery["userId"]??"",
+                    postImage: dataFromQuery["postImage"]??"",
+                    profileImage: dataFromQuery["profileImage"]??"",
 
 
                    );

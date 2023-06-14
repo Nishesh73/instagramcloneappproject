@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramcloneapp/model/post_model.dart';
 import 'package:instagramcloneapp/services/storage_methods.dart';
+import 'package:instagramcloneapp/utils/utils_gallery.dart';
 import 'package:instagramcloneapp/widgets/post_card.dart';
 
 import 'package:uuid/uuid.dart';
@@ -31,6 +32,28 @@ class FirestoreMethods{
       "followers": FieldValue.arrayUnion([currentLoginUserid])
 
     });
+    //for showing in feedactivity
+
+    FirebaseFirestore.instance.collection("activityfeed")
+    .doc(userSpecific_or_FollowId)
+    .collection("feedItems")
+    .doc(FirebaseAuth.instance.currentUser!.uid)
+    .set({
+       "timeStamp": Timestamp.now(),
+          
+          "type": "following",
+          "name": currentUserName,
+
+          "userId": currentUserId,
+          "userSpecificId": userSpecific_or_FollowId,
+          
+          "profileImage": currentUserProfile , 
+
+
+
+
+    });
+
 
 
   }
@@ -47,41 +70,31 @@ class FirestoreMethods{
 
     });
 
+    //removing from feed activity
+     FirebaseFirestore.instance.collection("activityfeed")
+    .doc(userSpecific_or_FollowId)
+    .collection("feedItems")
+    .doc(FirebaseAuth.instance.currentUser!.uid)
+    .get().then((documetn){
+
+      if(documetn.exists){
+        documetn.reference.delete();
+        
+      }
+
+    });
+
+    
 
 
 
   }
 
-  // if(userIdSpecificFollowList.contains(currentLoginUserid)){
-  //   FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).update({
-  //     "followers": FieldValue.arrayRemove([currentLoginUserid])
-
-  //   });
-
-  //    FirebaseFirestore.instance.collection("users").doc(currentLoginUserid).update({
-  //     "following": FieldValue.arrayRemove([userSpecific_or_FollowId])
-
-  //   });
-
-
-  // }
-  // else{
-  //    FirebaseFirestore.instance.collection("users").doc(userSpecific_or_FollowId).update({
-
-  //     "followers": FieldValue.arrayUnion([currentLoginUserid])
-
-  //   });
-
-  //    FirebaseFirestore.instance.collection("users").doc(currentLoginUserid).update({
-  //     "following": FieldValue.arrayUnion([userSpecific_or_FollowId])
-
-  //   });
+ 
 
 
 
 
-
-  // }
 
 
 
@@ -152,6 +165,8 @@ likePost(String postId, String userId, List likes, String userName, String profI
 
         }
 
+        return false;
+
 
 
 
@@ -160,6 +175,7 @@ likePost(String postId, String userId, List likes, String userName, String profI
       }
 
       else{
+        
 
 
         
@@ -180,7 +196,7 @@ likePost(String postId, String userId, List likes, String userName, String profI
           "type": "like",
           "name": currentUserName,
 
-          "currentUserId": currentUserId,
+          "userId": currentUserId,
           "postImage": postUrl,
           "profileImage": currentUserProfile , 
 
@@ -188,6 +204,8 @@ likePost(String postId, String userId, List likes, String userName, String profI
          });
 
          }
+
+         return true;
 
 
 
@@ -215,10 +233,10 @@ likePost(String postId, String userId, List likes, String userName, String profI
       .doc(commentId)
       
       .set({
-        "userName": userName,
+        "userName": currentUserName,
         "comment": text,
-        "userId": userId,
-        "profilePic": profileImage,
+        "userId": currentUserId,
+        "profilePic": currentUserProfile,
         "datePublished": Timestamp.now()
        
 
@@ -230,14 +248,24 @@ likePost(String postId, String userId, List likes, String userName, String profI
 
   }
 
-  deletePost(String postId, BuildContext context)async{
+  deletePost(String postId, BuildContext context, String anyUid)async{
 
     try {
+      if(FirebaseAuth.instance.currentUser!.uid == anyUid){
+
+      
       await FirebaseFirestore.instance.collection("posts")
                                    .doc(postId).delete();
 
      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("post deleted")));                              
 
+      }
+
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Action cant be performed")));
+
+
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));  
       print(e); 
@@ -246,12 +274,13 @@ likePost(String postId, String userId, List likes, String userName, String profI
 
   }
 
-  logOut()async{
+  logOut(BuildContext context)async{
 
     try {
      await FirebaseAuth.instance.signOut();
     
     } catch (e) {
+      mySnackBars(context, e.toString());
       print(e); 
     }
     

@@ -36,16 +36,23 @@ class _ProfileChatState extends State<ProfileChat> {
   String about = "";
 
   //String? imagePath;
-   Uint8List? uintFile;
+   Uint8List? uintFile ;
+   bool isLoading = true;
   
 
- 
+ @override
+ void initState() { 
+   super.initState();
+
+   isLoading = false;
+   
+ }
   
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
+      child: isLoading?CircularProgressIndicator() : Scaffold(
     
         appBar: AppBar(title: Text("Chat Profile")),
     
@@ -116,16 +123,6 @@ class _ProfileChatState extends State<ProfileChat> {
                                         backgroundImage: MemoryImage(uintFile!),
                                        ),
         
-                                        //   child: Image.file(
-                                        // File(imagePath!),
-        
-                                        // fit: BoxFit.fill,
-                                        // width: MediaQuery.of(context).size.width * .3,
-                                        // height: MediaQuery.of(context).size.height * .3,
-                                                
-                                        //        // placeholder: (context, url) => CircularProgressIndicator(),
-                                                
-                                        //   ),
         
         
         
@@ -168,7 +165,7 @@ class _ProfileChatState extends State<ProfileChat> {
                          ],
                        ),
                       
-                                 Text(querydata!["email"], style: TextStyle(fontWeight: FontWeight.bold),),
+                                 Text(querydata!["email"]??"", style: TextStyle(fontWeight: FontWeight.bold),),
                       
                                  TextFormField(
         
@@ -188,7 +185,7 @@ class _ProfileChatState extends State<ProfileChat> {
                                   }),
         
         
-                                  initialValue: querydata["name"] ,
+                                  initialValue: querydata["name"]??"" ,
                                   
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(CupertinoIcons.person),
@@ -219,7 +216,7 @@ class _ProfileChatState extends State<ProfileChat> {
                                     });
                                     
                                   }),
-                                  initialValue: querydata["about"] ,
+                                  initialValue: querydata["about"]??"" ,
                                   
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(CupertinoIcons.info),
@@ -259,7 +256,7 @@ class _ProfileChatState extends State<ProfileChat> {
                       
                       
                       
-                    //  Image.network(querydata!["image"]),
+                   
                       
                       
                     ],),
@@ -275,7 +272,7 @@ class _ProfileChatState extends State<ProfileChat> {
       ),
     );
   }
- //value return garna xaina
+
  void _showBottomSheetPlease(){
 
     showModalBottomSheet(
@@ -363,7 +360,6 @@ class _ProfileChatState extends State<ProfileChat> {
               
               child: Center(child: Text("Gallery", textAlign: TextAlign.center,))),
 
-              //  "lib/assets/ic_instagram.svg"
           ),
 
                                          

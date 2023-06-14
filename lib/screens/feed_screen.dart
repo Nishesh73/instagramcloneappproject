@@ -60,10 +60,12 @@ class FeedScreen extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (context, index) {
+                  
 
 
                   return PostCard(
                     snap: snapshot.data?.docs[index].data(),
+                    
                   );
                   
                 }),

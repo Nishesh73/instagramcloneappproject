@@ -78,12 +78,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
         alignment: Alignment.bottomCenter,
         height: kToolbarHeight,
         child: Row(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundImage: NetworkImage("${widget.snap["profImage"]}"),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: CircleAvatar(
+          //     backgroundImage: NetworkImage("${widget.snap["profImage"]}"),
+          //   ),
+          // ),
           Container(
             margin: EdgeInsets.only(left: 5.0),
             width: MediaQuery.of(context).size.width * 0.8,
@@ -97,7 +97,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
               }),
               decoration: InputDecoration(
                 border: InputBorder.none,
-              hintText: "Comment in post of ${widget.snap["userName"]} "
+              hintText: " write a comment..." 
               ),
             ),
           ),
