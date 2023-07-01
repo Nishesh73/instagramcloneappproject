@@ -173,7 +173,7 @@ class _HomeChatState extends State<HomeChat> {
           ),
           
           body: StreamBuilder(
-            stream: FirebaseFirestore.instance.collection("chatUser").where("id", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
+            stream: FirebaseFirestore.instance.collection("chatUser").snapshots(),
             builder: (BuildContext context, AsyncSnapshot snapshot){
               
               

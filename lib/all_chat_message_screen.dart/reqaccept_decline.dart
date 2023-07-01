@@ -20,13 +20,59 @@ class FriendRequestPage extends StatefulWidget {
 
 
 class _FriendRequestPageState extends State<FriendRequestPage> {
-  bool alreadYsendFriendRequest = false;
+
+  
+  String status = "";
+
+cancelFriendRequest()async{
+  try{
+   await  FirebaseFirestore.instance
+              .collection("frinedReqChat")
+              .doc(currentUserId)
+              .collection("requests")
+              .doc(widget.snap["id"])
+              .delete();
+
+       //receiver doc
+      await  FirebaseFirestore.instance
+              .collection("frinedReqChat")
+              .doc(widget.snap["id"])
+              .collection("requests")
+              .doc(currentUserId)
+              .delete();
+
+  }
+  catch(e){
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+  }
+
+
+
+}
 
   getFirebaseData()async{
-  var ds = await  FirebaseFirestore.instance.collection("chatFriendReqList").doc(widget.snap["id"]).get();
+  var ds = await   FirebaseFirestore.instance
+              .collection("frinedReqChat")
+              .doc(currentUserId)
+              .collection("requests")
+              .doc(widget.snap["id"])
+              .get();
 
- List friendList = ds.data()!["friendList"];
- alreadYsendFriendRequest = friendList.contains(currentUserId);
+              if(!ds.exists){
+                status = "";
+
+              }
+              else{
+
+              status = ds.data()!["status"];
+
+              }
+
+
+
+              
+
+ 
 
   setState(() {
     
@@ -84,31 +130,67 @@ void initState() {
             ),),
             SizedBox(height: 10,),
 
-        !alreadYsendFriendRequest?    ElevatedButton(onPressed: ()async{
+ if(status == "") ElevatedButton(onPressed: ()async{
               // List friendName = [];
               // friendName.add(currentUserId);
-              //receiver
-              FirebaseFirestore.instance.collection("chatFriendReqList").doc(widget.snap["id"]).set({
-                "friendList": FieldValue.arrayUnion([currentUserId]),
+
+
+              //sender
+              try {
+                //sender
+                 await  FirebaseFirestore.instance
+              .collection("frinedReqChat")
+              .doc(currentUserId)
+              .collection("requests")
+              .doc(widget.snap["id"])
+              .set({
+              "status": "sent"
+
+
+              });
+              //receivr
+                await  FirebaseFirestore.instance
+              .collection("frinedReqChat")
+              .doc(widget.snap["id"])
+              .collection("requests")
+              .doc(currentUserId)
+              .set({
+              "status": "receiver"
+
+
+              });
+
+
+
+
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+              }
+           
+
+              // //receiver
+
+              // FirebaseFirestore.instance
+              // .collection("frinedReqChat")
+              // .doc(widget.snap["id"])
+              // .collection("requests")
+              // .doc(currentUserId)
+              // .set({
+              //   "status": ""
+
+
+              // });
+           
+               
+ },
+            
                 
 
-              },
-              SetOptions(merge: true),
-              
-              );
-              //sender
-              FirebaseFirestore.instance.collection("chatFriendReqList").doc(currentUserId).set({
-                "friendList": FieldValue.arrayUnion([widget.snap["id"]]),
-               
-
-              },
-              SetOptions(merge: true),
-              
-              );
+           
+            
 
 
-
-            }, child: Padding(
+             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text("Friend request Send",
               style: TextStyle(color: Colors.black,
@@ -116,78 +198,36 @@ void initState() {
               ),
               
               ),
-            )
+            ),
             
-            ):
+             )
+             
+       else if(status == "sent")       ElevatedButton(onPressed: (){
+
+        cancelFriendRequest();
+
+        
+
+
+             }, child: Text("Cancel friend request"))
+
+
+      else if(status == "receiver")  ElevatedButton(onPressed: (){}, child: Text("Accept friend request")),
+
+
+      // else ElevatedButton(onPressed: (){}, child: Text("Unfriend")),
+     
             
-            FirebaseAuth.instance.currentUser!.uid == widget.snap["id"]?  ElevatedButton(onPressed: ()async{
-              //  FirebaseFirestore.instance.collection("chatFriendReqList").doc(widget.snap["id"]).set({
-              //   "friendList": FieldValue.arrayRemove([currentUserId]),
                 
 
-              // },
-              // SetOptions(merge: true),
-              
-              // );
-              // //sender
-              // FirebaseFirestore.instance.collection("chatFriendReqList").doc(currentUserId).set({
-              //   "friendList": FieldValue.arrayRemove([widget.snap["id"]]),
-                
-
-              // },
-              // SetOptions(merge: true),
-              
-              // );
             
-
-            }, child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Cancel friend request",
-              style: TextStyle(color: Colors.black,
-              fontSize: 18,
-              ),
               
-              ),
-            )
-            
-            ): ElevatedButton(onPressed: ()async{
-               FirebaseFirestore.instance.collection("chatFriendReqList").doc(widget.snap["id"]).set({
-                "friendList": FieldValue.arrayRemove([currentUserId]),
-                
-
-              },
-              SetOptions(merge: true),
-              
-              );
-              //sender
-              FirebaseFirestore.instance.collection("chatFriendReqList").doc(currentUserId).set({
-                "friendList": FieldValue.arrayRemove([widget.snap["id"]]),
-                
-
-              },
-              SetOptions(merge: true),
-              
-              );
-            
-
-            }, child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Accept friend request",
-              style: TextStyle(color: Colors.black,
-              fontSize: 18,
-              ),
-              
-              ),
-            )
-            
-            )
-
+          
 
             
             
-            ,
-            SizedBox(height: 10,),
-
+            
+        
 
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
